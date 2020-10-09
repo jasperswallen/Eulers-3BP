@@ -19,7 +19,6 @@ moving_mass_x_prime = float(
     input("Enter the moving mass's initial x velocity: "))
 moving_mass_y_prime = float(
     input("Enter the moving mass's initial y velocity: "))
-moving_mass = float(input("Enter the moving mass's mass: "))
 
 print(
     f"original: m1: ({mass_1_x}, {mass_1_y}), m2: ({mass_2_x}, {mass_2_y}), m: ({moving_mass_x}, {moving_mass_y})")
