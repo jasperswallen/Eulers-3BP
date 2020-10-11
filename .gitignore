@@ -1,5 +1,16 @@
 .vscode/settings.json
 .ipynb_checkpoints/*
 *.pdf
-*.jpeg
+!Project.pdf
 *.doc*
+*.aux
+*.fls
+*.log
+*_latexmk*
+*.gz
+*_temp*
+*.out
+*.blg
+*.bbl
+*.toc
+ProjectNotes.bib
