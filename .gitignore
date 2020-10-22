@@ -1,4 +1,4 @@
-.vscode/settings.json
+.vscode/
 .ipynb_checkpoints/*
 *.pdf
 !Project.pdf
