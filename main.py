@@ -20,39 +20,43 @@ moving_mass_x_prime = float(
 moving_mass_y_prime = float(
     input("Enter the moving mass's initial y velocity: "))
 
-print(
-    f"original: m1: ({mass_1_x}, {mass_1_y}), m2: ({mass_2_x}, {mass_2_y}), m: ({moving_mass_x}, {moving_mass_y})")
 
-# Reposition the masses such that M1 is at the origin and M2 lies along the y-axis
-# First, move all points
-# Then rotate
+def reorientAxes(mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y):
+    print(
+        f"original: m1: ({mass_1_x}, {mass_1_y}), m2: ({mass_2_x}, {mass_2_y}), m: ({moving_mass_x}, {moving_mass_y})")
 
-mass_2_x -= mass_1_x
-mass_2_y -= mass_1_y
-moving_mass_x -= mass_1_x
-moving_mass_y -= mass_1_y
+    # Reposition the masses such that M1 is at the origin and M2 lies along the y-axis
+    # First, move all points
+    # Then rotate
 
-m_theta = np.arctan2(moving_mass_y, moving_mass_x)
-m2_theta = np.arctan2(mass_2_y, mass_2_x)
+    mass_2_x -= mass_1_x
+    mass_2_y -= mass_1_y
+    moving_mass_x -= mass_1_x
+    moving_mass_y -= mass_1_y
 
-mass_2_x = np.sqrt(mass_2_x ** 2 + mass_2_y ** 2)
-mass_2_y = 0
-mass_1_x = 0
-mass_1_y = 0
+    m_theta = np.arctan2(moving_mass_y, moving_mass_x)
+    m2_theta = np.arctan2(mass_2_y, mass_2_x)
 
-# Subtract m2_theta from current m_theta
+    mass_2_x = np.sqrt(mass_2_x ** 2 + mass_2_y ** 2)
+    mass_2_y = 0
+    mass_1_x = 0
+    mass_1_y = 0
 
-m_theta -= m2_theta
-m_r = np.sqrt(moving_mass_x ** 2 + moving_mass_y ** 2)
+    # Subtract m2_theta from current m_theta
 
-# Convert back to cartesian coordinates
+    m_theta -= m2_theta
+    m_r = np.sqrt(moving_mass_x ** 2 + moving_mass_y ** 2)
 
-moving_mass_x = m_r * np.cos(m_theta)
-moving_mass_y = m_r * np.sin(m_theta)
+    # Convert back to cartesian coordinates
 
-# m1 and m2 should now lay along the x-axis and m should be rotated relative to them
-print(
-    f"final: m1: ({mass_1_x}, {mass_1_y}), m2: ({mass_2_x}, {mass_2_y}), m: ({moving_mass_x}, {moving_mass_y})")
+    moving_mass_x = m_r * np.cos(m_theta)
+    moving_mass_y = m_r * np.sin(m_theta)
+
+    # m1 and m2 should now lay along the x-axis and m should be rotated relative to them
+    print(
+        f"final: m1: ({mass_1_x}, {mass_1_y}), m2: ({mass_2_x}, {mass_2_y}), m: ({moving_mass_x}, {moving_mass_y})")
+
+    return (mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y)
 
 
 its = int(input("Enter the number of iterations to perform: "))
@@ -176,13 +180,14 @@ def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x
     # Yoshida's 4th Order equation
 
     # coefficients that stay the same each iteration
-    c_1 = 1 / (2 * (2 - np.power(2, 1 / 3)))
-    c_2 = (1 - np.power(2, 1 / 3)) / (2 * (2 - np.power(2, 1 / 3)))
+    beta = np.power(2, 1 / 3)
+    c_1 = 1 / (2 * (2 - beta))
+    c_2 = (1 - beta) / (2 * (2 - beta))
     c_3 = c_2
     c_4 = c_1
 
-    d_1 = 1 / (2 - np.power(2, 1 / 3))
-    d_2 = -np.power(2, 1 / 3) / (2 * (2 - np.power(2, 1 / 3)))
+    d_1 = 1 / (2 - beta)
+    d_2 = -beta / (2 - beta)
     d_3 = d_1
     d_4 = 0
 
@@ -216,8 +221,6 @@ def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x
         x_prime.append(x_prime_4)
         y_prime.append(y_prime_4)
 
-    # print(x, y, x_prime, y_prime)
-
     plt.plot(x, y)
 
     masses = [[mass_1_x, mass_2_x, moving_mass_x],
@@ -233,11 +236,14 @@ def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x
     plt.show()
 
 
+(mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y) = reorientAxes(mass_1_x, mass_1_y, mass_2_x,
+                                                                                      mass_2_y, moving_mass_x, moving_mass_y)
+
 eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
             moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
 
-rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
-           moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
-
 yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
                 moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
+
+# rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
+#            moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
