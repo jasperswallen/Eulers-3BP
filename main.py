@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import math
 
 mass_1_x = float(input("Enter M1's x position: "))
 mass_1_y = float(input("Enter M1's y position: "))
@@ -109,8 +108,6 @@ def eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, mo
     for i, txt in enumerate(labels):
         plt.annotate(txt, (masses[0][i], masses[1][i]))
 
-    plt.show()
-
 
 def rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
     # declare arrays that will be appended to in loop
@@ -123,32 +120,35 @@ def rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, mov
 
     for n in range(its):
         # calculate next x, y, x', and y'
-        x_n_plus_one = x[n] + delta * x_prime[n]
+        x_1 = delta * x_prime[n]
+        y_1 = delta * y_prime[n]
+        x_prime_1 = delta * calculateXAccel(x[n], y[n])
+        y_prime_1 = delta * calculateYAccel(x[n], y[n])
+
+        x_2 = delta * (x_prime[n] + x_prime_1 / 2)
+        y_2 = delta * (y_prime[n] + y_prime_1 / 2)
+        x_prime_2 = delta * calculateXAccel(x[n] + x_1 / 2, y[n] + y_1 / 2)
+        y_prime_2 = delta * calculateYAccel(x[n] + x_1 / 2, y[n] + y_1 / 2)
+
+        x_3 = delta * (x_prime[n] + x_prime_2 / 2)
+        y_3 = delta * (y_prime[n] + y_prime_2 / 2)
+        x_prime_3 = delta * calculateXAccel(x[n] + x_2 / 2, y[n] + y_2 / 2)
+        y_prime_3 = delta * calculateYAccel(x[n] + x_2 / 2, y[n] + y_2 / 2)
+
+        x_4 = delta * (x_prime[n] + x_prime_3)
+        y_4 = delta * (y_prime[n] + y_prime_3)
+        x_prime_4 = delta * calculateXAccel(x[n] + x_3, y[n] + y_3)
+        y_prime_4 = delta * calculateYAccel(x[n] + x_3, y[n] + y_3)
+
+        x_n_plus_one = x[n] + 1 / 6 * (x_1 + 2 * x_2 + 2 * x_3 + x_4)
+        y_n_plus_one = y[n] + 1 / 6 * (y_1 + 2 * y_2 + 2 * y_3 + y_4)
+        x_prime_n_plus_one = x_prime[n] + 1 / 6 * \
+            (x_prime_1 + 2 * x_prime_2 + 2 * x_prime_3 + x_prime_4)
+        y_prime_n_plus_one = y_prime[n] + 1 / 6 * \
+            (y_prime_1 + 2 * y_prime_2 + 2 * y_prime_3 + y_prime_4)
+
         x.append(x_n_plus_one)
-        y_n_plus_one = y[n] + delta * y_prime[n]
         y.append(y_n_plus_one)
-
-        x_k_1 = delta * calculateXAccel(x[n + 1], y[n + 1])
-        y_k_1 = delta * calculateYAccel(x[n + 1], y[n + 1])
-
-        x_k_2 = delta * \
-            calculateXAccel(x[n + 1] + x_k_1 / 2, y[n + 1] + y_k_1 / 2)
-        y_k_2 = delta * \
-            calculateYAccel(x[n + 1] + x_k_1 / 2, y[n + 1] + y_k_1 / 2)
-
-        x_k_3 = delta * \
-            calculateXAccel(x[n + 1] + x_k_2 / 2, y[n + 1] + y_k_2 / 2)
-        y_k_3 = delta * \
-            calculateYAccel(x[n + 1] + x_k_2 / 2, y[n + 1] + y_k_2 / 2)
-
-        x_k_4 = delta * calculateXAccel(x[n + 1] + x_k_3, y[n + 1] + y_k_3)
-        y_k_4 = delta * calculateYAccel(x[n + 1] + x_k_3, y[n + 1] + y_k_3)
-
-        x_prime_n_plus_one = x_prime[n] + \
-            (x_k_1 + 2 * x_k_2 + 2 * x_k_3 + x_k_4) / 6
-        y_prime_n_plus_one = y_prime[n] + \
-            (y_k_1 + 2 * y_k_2 + 2 * y_k_3 + y_k_4) / 6
-
         x_prime.append(x_prime_n_plus_one)
         y_prime.append(y_prime_n_plus_one)
 
@@ -165,8 +165,6 @@ def rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, mov
     labels = ["m1", "m2", "m"]
     for i, txt in enumerate(labels):
         plt.annotate(txt, (masses[0][i], masses[1][i]))
-
-    plt.show()
 
 
 def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
@@ -233,8 +231,6 @@ def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x
     for i, txt in enumerate(labels):
         plt.annotate(txt, (masses[0][i], masses[1][i]))
 
-    plt.show()
-
 
 (mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y) = reorientAxes(mass_1_x, mass_1_y, mass_2_x,
                                                                                       mass_2_y, moving_mass_x, moving_mass_y)
@@ -245,5 +241,7 @@ eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
 yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
                 moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
 
-# rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
-#            moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
+rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
+           moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
+
+plt.show()
