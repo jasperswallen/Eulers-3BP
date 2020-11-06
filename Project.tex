@@ -11,6 +11,7 @@
 \usepackage{hyperref}  % add hypertext capabilities
 \usepackage{setspace}
 \usepackage{listings}
+\usepackage{caption}
 
 \graphicspath{ {images/} }
 
@@ -27,7 +28,7 @@
 
 
 \begin{abstract}
-    Euler's Three Body Problem is a simplification of the general 3-Body Problem, with two fixed large masses and one free mass. While it is possible to solve Euler's Three Body Problem analytically, the solutions are not simple to evaluate in Cartesian coordinates. Instead, various numerical methods were used. Euler's method, the Runge-Kutta method, and Forest \& Neri's method were used. With these methods, plots were generated in Python based on various initial conditions. Forest \& Neri's method was found to be the most precise, followed by Runge-Kutta and then Euler's Method. Euler's Method had the fastest runtime, followed by Forest \& Neri and then the Runge-Kutta methods.
+    Euler's Three Body Problem is a simplification of the general 3-Body Problem, with two fixed large masses and one free mass. While it is possible to solve Euler's Three Body Problem analytically, the solutions are not simple to evaluate in cartesian coordinates. Instead, various numerical methods were used. Euler's method, the Runge-Kutta method, and Forest \& Neri's method were used. With these methods, plots were generated in Python based on various initial conditions. Forest \& Neri's method was found to be the most precise, followed by Runge-Kutta and then Euler's Method. Euler's Method had the fastest runtime, followed by Forest \& Neri and then the Runge-Kutta methods.
         {\singlespacing \tableofcontents}
 \end{abstract}
 
@@ -95,7 +96,7 @@ Since there are also just two degrees of freedom in this case, the system is exa
 
 \subsection{Finding Equations}\label{sec:equations}
 While analytical solutions are useful for determining the exact motion of systems, numerical solutions are often much simpler. Such is the case here.
-To do this, without loss of generality, shift the system so that $m_1$ is at the origin and $m_2$ is a distance $d$ along the $y$-axis from the origin. Now represent $m_2$ as a factor of $m_1=m_a$ such that $m_2=\alpha m_a$, as shown in Fig. \ref{fig:shiftedsys}.
+To do this, without loss of generality, shift the system so that $m_1$ is at the origin and $m_2$ is a distance $d$ along the $y$-axis from the origin. Now represent $m_2$ as a factor of $m_a\equiv m_1$ such that $m_2=\alpha m_a$, as shown in Fig. \ref{fig:shiftedsys}.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{Fig 3.jpeg}
@@ -103,7 +104,7 @@ To do this, without loss of generality, shift the system so that $m_1$ is at the
     \label{fig:shiftedsys}
 \end{figure}
 
-Up until this point, the masses and distances have been unitless and arbitrary. If these masses are instead measured in terms of solar units, further simplifications arise. If $m_a\equiv m_1$ is set to a “solar mass”, we see that $Gm_a=4\pi^2$. This is because the angular velocity of a mass around a primary (for example, the Earth around the Sun) is $2\pi*AU/yr$, where $AU$ is the average distance between the primary and the mass and $yr$ is the period (on Earth, one year). That is, the problem is nondimensionalized by setting the unit of mass to $m_1$ and the unit of time such that the period of the orbits of the primaries is $2\pi$ \cite{Wild1980,Worthington2012}.
+Up until this point, the masses and distances have been unitless and arbitrary. If these masses are instead measured in terms of solar units, further simplifications arise. If $m_a$ is set to a “solar mass”, we see that $Gm_a=4\pi^2$. This is because the angular velocity of a mass around a primary (for example, the Earth around the Sun) is $2\pi*AU/yr$, where $AU$ is the average distance between the primary and the mass and $yr$ is the period (on Earth, one year). That is, the problem is nondimensionalized by setting the unit of mass to $m_1$ and the unit of time such that the period of the orbits of the primaries is $2\pi$ \cite{Wild1980,Worthington2012}.
 
 Since the origin is now fixed, the equations of motion now use relative positioning to the origin (and $m_1$). From this and Newton's Law of Gravitation,
 \begin{equation}
@@ -131,8 +132,8 @@ so
 Plugging in $Gm_a=4\pi^2$ and dividing \ref{eq:force} by $m$ the following equations of acceleration emerge, dependent only on $x$ and $y$ positions
 \begin{equation}
     \begin{aligned}
-        \ddot{x}(x,y) & = 4\pi^2(\frac{x}{(x^2+y^2)^{\frac{3}{2}}}+\frac{\alpha(x-d)}{((x-d)^2+y^2)^{\frac{3}{2}}}) \\
-        \ddot{y}(x,y) & = 4\pi^2y(\frac{1}{(x^2+y^2)^{\frac{3}{2}}}+\frac{\alpha}{((x-d)^2+y^2)^{\frac{3}{2}}})
+        \ddot{x}(x,y) & = -4\pi^2(\frac{x}{(x^2+y^2)^{\frac{3}{2}}}+\frac{\alpha(x-d)}{((x-d)^2+y^2)^{\frac{3}{2}}}) \\
+        \ddot{y}(x,y) & = -4\pi^2y(\frac{1}{(x^2+y^2)^{\frac{3}{2}}}+\frac{\alpha}{((x-d)^2+y^2)^{\frac{3}{2}}})
     \end{aligned}
 \end{equation}
 This is a system of nonlinear differential equations. As demonstrated above, analytical solutions are possible, but messy.
@@ -154,8 +155,8 @@ Adapting \ref{eq:eulersmethod} for $x$, $y$, $\dot{x}$, and $\dot{y}$, we get th
     \begin{aligned}
         x_{n+1}       & =x_n+\dot{x}_n\delta t                       \\
         y_{n+1}       & =y_n+\dot{y}_n\delta t                       \\
-        \dot{x}_{n+1} & =\dot{x}_n-\delta t\ddot{x}(x_{n+1},y_{n+1}) \\
-        \dot{y}_{n+1} & =\dot{y}_n-\delta t\ddot{y}(x_{n+1},y_{n+1})
+        \dot{x}_{n+1} & =\dot{x}_n+\delta t\ddot{x}(x_{n+1},y_{n+1}) \\
+        \dot{y}_{n+1} & =\dot{y}_n+\delta t\ddot{y}(x_{n+1},y_{n+1})
     \end{aligned}
 \end{equation}
 When they are evaluated in order, this is an iterable, programmable, and plottable solution.
@@ -174,15 +175,19 @@ Another way to incrementally solve integrable solutions is the Runge-Kutta metho
 \end{equation}
 Since both position and velocity can be calculated in this manner, in the context of this 3-Body problem, the equations become (evaluated in this order)
 \begin{equation}
-    \begin{aligned}
-        x_{n+1}       & = x_n + \delta t\dot{x}_n                                                          \\
-        y_{n+1}       & = y_n + \delta t\dot{y}_n                                                          \\
-        {k_1}_x       & = \ddot{x}(x_{n+1},y_{n+1})                                                        \\
-        {k_1}_y       & = \ddot{y}(x_{n+1},y_{n+1})                                                        \\
-        {k_2}_x       & = \ddot{x}(x_{n+1}+ \delta t \frac{{k_1}_x}{2}, y_{n+1}+\delta t\frac{{k_1}_y}{2}) \\
-        ...                                                                                                \\
-        \dot{x}_{n+1} & = \dot{x}_n + \frac{1}{6}\delta t({k_1}_x+2{k_2}_x+2{k_2}_x+{k_4}_x)
-    \end{aligned}
+    \begin{split}
+        &x_1=\delta t\dot{x}_n \\
+        &x_2=\delta t(\dot{x}_n+\frac{\dot{x}_1}{2}) \\
+        &... \\
+        &x_{n+1}=x_n+\frac{x_1+2x_2+2x_3+x_4}{6} \\
+    \end{split}
+    \qquad(\text{for }x\text{ and } y)\qquad
+    \begin{split}
+        &\dot{x}_1=\delta t\ddot{x}(x_n,y_n) \\
+        &\dot{x}_2=\delta t\ddot{x}(x_n+\frac{x_1}{2},y_n+\frac{y_1}{2}) \\
+        &... \\
+        &\dot{x}_{n+1}=\dot{x}_n+\frac{\dot{x}_1+2\dot{x}_2+2\dot{x}_3+\dot{x}_4}{6}
+    \end{split}
     \label{eq:rungekutta-3bp}
 \end{equation}
 
