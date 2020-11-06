@@ -1,38 +1,27 @@
 import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+from matplotlib.colors import ListedColormap, BoundaryNorm
 import numpy as np
-
-mass_1_x = float(input("Enter M1's x position: "))
-mass_1_y = float(input("Enter M1's y position: "))
-mass_1 = float(input("Enter M1's mass: "))
-mass_2_x = float(input("Enter M2's x position: "))
-mass_2_y = float(input("Enter M2's y position: "))
-mass_2 = float(input("Enter M2's mass: "))
-
-alpha = mass_2 / mass_1
-print(
-    f"Representing the masses as factors of M1 gives us M1 = 1 * M and M2 = {alpha} * M")
-
-moving_mass_x = float(input("Enter the moving mass's initial x position: "))
-moving_mass_y = float(input("Enter the moving mass's initial y position: "))
-moving_mass_x_prime = float(
-    input("Enter the moving mass's initial x velocity: "))
-moving_mass_y_prime = float(
-    input("Enter the moving mass's initial y velocity: "))
 
 
 def reorientAxes(mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y):
+    '''
+    Reorients axes so that `m_1` is at the origin and `m_2` lies along the positive x-axis.\\
+    This is done by shifting to move `m_1` to origin, then rotating the relative angle `m_2` is above the positive x-axis.
+
+    Returns a tuple of the inputs after shifting
+    '''
     print(
         f"original: m1: ({mass_1_x}, {mass_1_y}), m2: ({mass_2_x}, {mass_2_y}), m: ({moving_mass_x}, {moving_mass_y})")
 
     # Reposition the masses such that M1 is at the origin and M2 lies along the y-axis
     # First, move all points
-    # Then rotate
-
     mass_2_x -= mass_1_x
     mass_2_y -= mass_1_y
     moving_mass_x -= mass_1_x
     moving_mass_y -= mass_1_y
 
+    # Then rotate
     m_theta = np.arctan2(moving_mass_y, moving_mass_x)
     m2_theta = np.arctan2(mass_2_y, mass_2_x)
 
@@ -41,13 +30,13 @@ def reorientAxes(mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_m
     mass_1_x = 0
     mass_1_y = 0
 
-    # Subtract m2_theta from current m_theta
-
+    # Subtract m2_theta from current m_theta to get angle of m relative to m2
     m_theta -= m2_theta
+
+    # radius
     m_r = np.sqrt(moving_mass_x ** 2 + moving_mass_y ** 2)
 
     # Convert back to cartesian coordinates
-
     moving_mass_x = m_r * np.cos(m_theta)
     moving_mass_y = m_r * np.sin(m_theta)
 
@@ -58,28 +47,36 @@ def reorientAxes(mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_m
     return (mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y)
 
 
-its = int(input("Enter the number of iterations to perform: "))
-delta = float(input("Enter the δt factor (the length of each input): "))
-
-
 def calculateXAccel(x_val, y_val):
+    '''
+    Calculates the acceleration in the x direction from a given position and masses\\
+    `x''=-4pi^2(x/(x^2+y^2)^(3/2) + alpha(x-d)/((x-d)^2+y^2)^(3/2))`
+    '''
+
     return float(- 4 * (np.pi ** 2) * (x_val / np.power((x_val ** 2) + (y_val ** 2), 3 / 2) + alpha * (x_val - mass_2_x) / np.power(((x_val - mass_2_x) ** 2) + (y_val ** 2), 3 / 2)))
 
 
 def calculateYAccel(x_val, y_val):
-    return float(- 4 * (np.pi ** 2) * y_val * (1 / np.power((x_val ** 2) + (y_val ** 2), 3 / 2) + 1 / np.power(((x_val - mass_2_x) ** 2) + (y_val ** 2), 3 / 2)))
+    '''
+    Calculates the acceleration in the y direction from a given position and masses\\
+    `y''=-4pi^2y(1/(x^2+y^2)^(3/2) + alpha/((x-d)^2+y^2)^(3/2))`
+    '''
+
+    return float(- 4 * (np.pi ** 2) * y_val * (1 / np.power((x_val ** 2) + (y_val ** 2), 3 / 2) + alpha / np.power(((x_val - mass_2_x) ** 2) + (y_val ** 2), 3 / 2)))
 
 
-def eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
+def eulerMethod(moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
+    '''
+    Euler's Method (1st Order)\\
+    `x_{n+1}=x_n+delta*x'`\\
+    `x'_{n+1}=x'_n+delta*x''(x_{n+1},y_{n+1})`\\
+    '''
+
     # declare arrays that will be appended to in loop
     x = [moving_mass_x]
     y = [moving_mass_y]
     x_prime = [moving_mass_x_prime]
     y_prime = [moving_mass_y_prime]
-
-    # We have the following equations of motion
-    # x'_(n+1)=x'_n-deltat4pi^2 (x_(n+1)/(r_1^3)_(n+1) +alpha(x_(n+1)-d)/(r_2^3)_(n+1))
-    # y'_(n+1)=y'_n-deltat4pi^2 y_(n+1) (1/(r_1^3)_(n+1) +alpha/(r_2^3)_(n+1))
 
     for n in range(its):
         # calculate next x, y, x', and y'
@@ -96,20 +93,21 @@ def eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, mo
             calculateYAccel(x[n + 1], y[n + 1])
         y_prime.append(y_prime_n_plus_one)
 
-    plt.plot(x, y)
-
-    masses = [[mass_1_x, mass_2_x, moving_mass_x],
-              [mass_1_y, mass_2_y, moving_mass_y]]
-    colors = np.array([[255, 0, 0], [0, 255, 0], [0, 0, 255]])
-
-    plt.scatter(masses[0], masses[1], c=colors / 255)
-
-    labels = ["m1", "m2", "m"]
-    for i, txt in enumerate(labels):
-        plt.annotate(txt, (masses[0][i], masses[1][i]))
+    plt.plot(x, y, label="Euler's Method", color="red")
 
 
-def rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
+def rungeKutta(moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
+    '''
+    Runge Kutta 4th Order Method
+
+    `x_1=delta*x'_n`\\
+    `x'_1=delta*x''(x_n,y_n)`\\
+    `x_2=delta*(x'_n+x'_1/2)`\\
+    `x'_2=delta*x''(x_n+x_1/2,y_n+y_1/2)`\\
+    ...\\
+    `x_{n+1}=x_n+1/6(x_1+2x_2+2x_3+x_4)`\\
+    `x'_{n+1}=x'_n+1/6(x'_1+2x'_2+2x'_3+x'_4)`
+    '''
     # declare arrays that will be appended to in loop
     x = [moving_mass_x]
     y = [moving_mass_y]
@@ -154,21 +152,10 @@ def rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, mov
 
     # print(x, y, x_prime, y_prime)
 
-    plt.plot(x, y)
-
-    masses = [[mass_1_x, mass_2_x, moving_mass_x],
-              [mass_1_y, mass_2_y, moving_mass_y]]
-    colors = np.array([[255, 0, 0], [0, 255, 0], [0, 0, 255]])
-
-    plt.scatter(masses[0], masses[1], c=colors / 255)
-
-    labels = ["m1", "m2", "m"]
-    for i, txt in enumerate(labels):
-        plt.annotate(txt, (masses[0][i], masses[1][i]))
+    plt.plot(x, y, label="Runge Kutta", color="blue")
 
 
-def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
-                    moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
+def yoshida4thOrder(moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
     # declare arrays that will be appended to in loop
     x = [moving_mass_x]
     y = [moving_mass_y]
@@ -219,7 +206,46 @@ def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x
         x_prime.append(x_prime_4)
         y_prime.append(y_prime_4)
 
-    plt.plot(x, y)
+    plt.plot(x, y, label="Forest & Neri", color="orange")
+
+
+def main():
+    mass_1_x = float(input("Enter M1's x position: "))
+    mass_1_y = float(input("Enter M1's y position: "))
+    mass_1 = float(input("Enter M1's mass: "))
+    global mass_2_x
+    mass_2_x = float(input("Enter M2's x position: "))
+    mass_2_y = float(input("Enter M2's y position: "))
+    mass_2 = float(input("Enter M2's mass: "))
+
+    global alpha
+    alpha = mass_2 / mass_1
+    print(
+        f"Representing the masses as factors of M1 gives us M1 = 1 * M and M2 = {alpha} * M")
+
+    moving_mass_x = float(
+        input("Enter the moving mass's initial x position: "))
+    moving_mass_y = float(
+        input("Enter the moving mass's initial y position: "))
+    moving_mass_x_prime = float(
+        input("Enter the moving mass's initial x velocity: "))
+    moving_mass_y_prime = float(
+        input("Enter the moving mass's initial y velocity: "))
+
+    its = int(input("Enter the number of iterations to perform: "))
+    delta = float(input("Enter the δt factor (the length of each input): "))
+
+    (mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y) = reorientAxes(
+        mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y)
+
+    eulerMethod(moving_mass_x, moving_mass_y, moving_mass_x_prime,
+                moving_mass_y_prime, its, delta)
+
+    yoshida4thOrder(moving_mass_x, moving_mass_y,
+                    moving_mass_x_prime, moving_mass_y_prime, its, delta)
+
+    rungeKutta(moving_mass_x, moving_mass_y, moving_mass_x_prime,
+               moving_mass_y_prime, its, delta)
 
     masses = [[mass_1_x, mass_2_x, moving_mass_x],
               [mass_1_y, mass_2_y, moving_mass_y]]
@@ -231,17 +257,11 @@ def yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x
     for i, txt in enumerate(labels):
         plt.annotate(txt, (masses[0][i], masses[1][i]))
 
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend()
 
-(mass_1_x, mass_1_y, mass_2_x, mass_2_y, moving_mass_x, moving_mass_y) = reorientAxes(mass_1_x, mass_1_y, mass_2_x,
-                                                                                      mass_2_y, moving_mass_x, moving_mass_y)
+    plt.show()
 
-eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
-            moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
 
-yoshida4thOrder(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
-                moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
-
-rungeKutta(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x,
-           moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta)
-
-plt.show()
+main()

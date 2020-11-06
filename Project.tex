@@ -27,7 +27,7 @@
 
 
 \begin{abstract}
-    Abstract goes here
+    Euler's Three Body Problem is a simplification of the general 3-Body Problem, with two fixed large masses and one free mass. While it is possible to solve Euler's Three Body Problem analytically, the solutions are not simple to evaluate in Cartesian coordinates. Instead, various numerical methods were used. Euler's method, the Runge-Kutta method, and Forest \& Neri's method were used. With these methods, plots were generated in Python based on various initial conditions. Forest \& Neri's method was found to be the most precise, followed by Runge-Kutta and then Euler's Method. Euler's Method had the fastest runtime, followed by Forest \& Neri and then the Runge-Kutta methods.
         {\singlespacing \tableofcontents}
 \end{abstract}
 
@@ -35,9 +35,9 @@
 
 
 \section{Background and Applications}
-Euler's Three Body Problem is a simplification of the 3-body problem (which is itself a special case of the N-body problem). In it, two large bodies are fixed at points in space (and are assumed to not act upon each other), while one smaller body is free to move through space. This smaller body's movement is dependent only on its relative position to the two larger masses and their masses. It can be assumed that the smaller mass $m$ is much smaller than the two larger masses $m_2$ and $m_3$. This can therefore be represented by a one-body problem. Given the level of simplification, it would not seem that this system is a close representation of real-world problems. However, this is not the case.
+Euler's Three Body Problem is a simplification of the 3-body problem (which is itself a special case of the $N$-body problem). The general $N$-body problem is to describe the movement of $N$ masses which exert an attractive gravitational force on each other. In Euler's simplification, two large bodies are fixed at points in space (and are assumed to not act upon each other), while one smaller body is free to move through space. This smaller body's movement is dependent only on its relative position to the two larger masses and their masses. It can be assumed that the smaller mass $m$ is much smaller than the two larger masses $m_2$ and $m_3$. This can therefore be represented by a one-body problem. Given the level of simplification, it would not seem that this system is a close representation of real-world problems. However, this is not the case.
 
-There are two main applications of this problem. In a model solar system with two large stars and an orbiting planet, the movement of the planet can be described by these dynamics if the stars are too far apart to significantly attract each other but the planet is moving quickly enough to oscillate between their fields (for example, Fig. \ref{fig:orbit}). The other application is in an electric field. Although electric fields are not described by exactly the same forces, their potential is still inverse to the distance. Thus, an analogue would be an electron moving through the electric field of two nuclei.
+There are two main applications of this problem. In our solar system, this is a very close representation of the movement of comets which interact with Jupiter and the sun \cite{Worthington2012,Koon2000}. The other application is in an electric field. Although electric fields are not described by exactly the same forces, their potential is still inverse to the distance. Thus, an analogue would be an electron moving through the electric field of two nuclei.
 
 \begin{figure}
     \centering
@@ -46,7 +46,7 @@ There are two main applications of this problem. In a model solar system with tw
     \label{fig:orbit}
 \end{figure}
 
-Newton's Law of Gravitation states that, for any two masses $m_1$ and $m_2$ separated by a radius $r=|\bm{r_1}-\bm{r_2}|$ (where $\bm{r_1}$ and $\bm{r_2}$ are the positions of $m_1$ and $m_2$, respectively), the gravitational force of $m_2$ on $m_1$ is
+To solve $N$-body problems, the gravitational forces must be known. Newton's Law of Gravitation states that, for any two masses $m_1$ and $m_2$ separated by a radius $r=|\bm{r_1}-\bm{r_2}|$ (where $\bm{r_1}$ and $\bm{r_2}$ are the positions of $m_1$ and $m_2$, respectively), the gravitational force of $m_2$ on $m_1$ is
 \begin{equation}
     \bm{F_{12}}=-\frac{Gm_1 m_2}{|\bm{r_1}-\bm{r_2}|^3}*(\bm{r_1}-\bm{r_2})
 \end{equation}
@@ -60,8 +60,8 @@ Since gravitation forces can be superimposed, the force of every body on a given
 \end{equation}
 Additionally, this is a closed system, so the total energy of the system is conserved.
 
-\section{General Equations of Motion}
-The given simplification of the problem into a one-body problem results (in the plane) in two degrees of freedom. In 3-dimensional space, there are three degrees of freedom. If the three masses initially lie in a plane together, they will remain in this plane. For simplicity, the initial conditions will be chosen for such a case.
+\section{General Equations of Motion}\label{sec:analytical}
+In 3-dimensional space, there are three degrees of freedom because only one mass is moving. If the three masses initially lie in a plane together, they will remain in this plane because there will be no forces normal to the plane. This results in two degrees of freedom, so for simplicity, the initial conditions will be chosen for such a case ($z\equiv0$).
 
 Since the total energy of the system is preserved, and the potential of the system can be described as above, the following equations of energy hold
 \begin{equation}
@@ -75,7 +75,7 @@ While solving a Lagrangian or Hamiltonian with these equations in cartesian coor
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{Fig 2.png}
-    \caption{the elliptical coordinate system $(\xi,\eta)$. $\xi$ can be thought of as correspondent to radial distance, and $\eta$ the angle. Adopted from \cite{Krishnaswami2019}}
+    \caption{the elliptical coordinate system $(\xi,\eta)$. Relative to polar coordinates, $\xi$ can be thought of as correspondent to radial distance $r$, and $\eta$ the angle $\theta$. Adopted from \cite{Krishnaswami2019}}.
     \label{fig:coordinatesys}
 \end{figure}
 
@@ -89,10 +89,11 @@ Therefore, there are two conserved quantities in the system: Whittaker's constan
 \end{equation}
 where $r_i$ is the distance $|\bm{r_i}-\bm{r}|$ between $m_i$ and $m$; $\bm{L_i}=mr_i^2\dot{\theta _i}\hat{z}$ is the angular momentum of a mass; $\theta _i$ is the angle between $\bm{r_i}$ and the $x$-axis; $\mu _i=Gmm_i$; and $\alpha$ is the “separation constant” derived from the separation of variables of $E$ in elliptical coordinates \cite[p. 101]{Krishnaswami2019}.
 
-By using the Hamilton-Jacobi equation and Liouville's theorem, this system can be solved analytically. See Ó'Mathúna \cite[pages 49-105 and 113-142]{OMathuna2008} for a detailed solution.
+Since there are also just two degrees of freedom in this case, the system is exactly analytically solvable by integration in the Liouville sense. See Ó'Mathúna \cite[pages 49-105 and 113-142]{OMathuna2008} for a detailed solution.
 
-\section{Numerical Solution}
-\subsection{Finding Equations}
+\section{Numerical Solution}\label{sec:numerical}
+
+\subsection{Finding Equations}\label{sec:equations}
 While analytical solutions are useful for determining the exact motion of systems, numerical solutions are often much simpler. Such is the case here.
 To do this, without loss of generality, shift the system so that $m_1$ is at the origin and $m_2$ is a distance $d$ along the $y$-axis from the origin. Now represent $m_2$ as a factor of $m_1=m_a$ such that $m_2=\alpha m_a$, as shown in Fig. \ref{fig:shiftedsys}.
 \begin{figure}
@@ -102,16 +103,15 @@ To do this, without loss of generality, shift the system so that $m_1$ is at the
     \label{fig:shiftedsys}
 \end{figure}
 
-Up until this point, the masses and distances have been unitless and arbitrary. If these masses are instead measured in terms of solar units, further simplifications arise. If $m_a$ is set to a “solar mass”, we see that $Gm_a=4\pi^2$. This is because the angular velocity of a mass around a primary (for example, the Earth around the Sun) is $2\pi*AU/yr$, where $AU$ is the average distance between the primary and the mass.
+Up until this point, the masses and distances have been unitless and arbitrary. If these masses are instead measured in terms of solar units, further simplifications arise. If $m_a\equiv m_1$ is set to a “solar mass”, we see that $Gm_a=4\pi^2$. This is because the angular velocity of a mass around a primary (for example, the Earth around the Sun) is $2\pi*AU/yr$, where $AU$ is the average distance between the primary and the mass and $yr$ is the period (on Earth, one year). That is, the problem is nondimensionalized by setting the unit of mass to $m_1$ and the unit of time such that the period of the orbits of the primaries is $2\pi$ \cite{Wild1980,Worthington2012}.
 
 Since the origin is now fixed, the equations of motion now use relative positioning to the origin (and $m_1$). From this and Newton's Law of Gravitation,
 \begin{equation}
-    F_x=-\frac{Gm_a m}{r_1^3}x-\frac{G\alpha m_a m}{r_2^3}(x-d)
-    \label{eq:fx}
-\end{equation}
-\begin{equation}
-    F_y=-\frac{Gm_a m}{r_1^3}y-\frac{G\alpha m_a m}{r_2^3}y
-    \label{eq:fy}
+    \begin{aligned}
+        F_x & =-\frac{Gm_a m}{r_1^3}x-\frac{G\alpha m_a m}{r_2^3}(x-d) \\
+        F_y & =-\frac{Gm_a m}{r_1^3}y-\frac{G\alpha m_a m}{r_2^3}y
+    \end{aligned}
+    \label{eq:force}
 \end{equation}
 with $r_i=|\bm{r_i}-\bm{r}|$ the distance between $m$ and $m_i$. In cartesian coordinates, this results in
 \begin{equation}
@@ -128,23 +128,27 @@ so
     \end{aligned}
 \end{equation}
 
-Since the equations of acceleration are often used, I will define them explicitly here, dependent on $x$ and $y$ inputs
+Plugging in $Gm_a=4\pi^2$ and dividing \ref{eq:force} by $m$ the following equations of acceleration emerge, dependent only on $x$ and $y$ positions
 \begin{equation}
     \begin{aligned}
         \ddot{x}(x,y) & = 4\pi^2(\frac{x}{(x^2+y^2)^{\frac{3}{2}}}+\frac{\alpha(x-d)}{((x-d)^2+y^2)^{\frac{3}{2}}}) \\
-        \ddot{y}(x,y) & = 4\pi^2y(\frac{1}{(x^2+y^2)^{\frac{3}{2}}}+\frac{1}{((x-d)^2+y^2)^{\frac{3}{2}}})
+        \ddot{y}(x,y) & = 4\pi^2y(\frac{1}{(x^2+y^2)^{\frac{3}{2}}}+\frac{\alpha}{((x-d)^2+y^2)^{\frac{3}{2}}})
     \end{aligned}
 \end{equation}
 This is a system of nonlinear differential equations. As demonstrated above, analytical solutions are possible, but messy.
 
 \subsection{Plottable Solutions}
-\subsubsection{Euler's Method}
-Using Euler's approximation
+Instead of analytically solving this system, numerical integrators can be used. Here, Euler's Method, the Runge-Kutta 4\textsuperscript{th} Order Method, and the Forest \& Neri method will be demonstrated. There are many other methods that allow for approximate solutions of systems of coupled differential equations, such as the leapfrog method.
+
+However, these particular methods have been chosen for several reasons. Euler's Method was chosen for its simplicity, speed, and ease of use with arrays (it accesses each element one-by-one). The Runge-Kutta 4\textsuperscript{th} Order Method was chosen because it is commonly used in general iterative differential equations solutions. Ther Forest \& Neri method was chosen because it was specifically written for use with force equations and computer modeling.
+
+\subsubsection{Euler's Method}\label{sec:euler}
+Euler's method is a simple and efficient formula to iteratively solve differential equations. Using Euler's approximation
 \begin{equation}
     x(t+\delta t)=x(t)+\delta t\dot{x}(t)+O(\delta t^2)
     \label{eq:eulersmethod}
 \end{equation}
-and neglecting higher order terms $O(\delta t^2)$, the solution is quickly plottable in cartesian coordinates. This has error on the order of $\delta t$ (\cite[p. 298]{Wild1980}).
+and neglecting higher order terms $O(\delta t^2)$, the solution is quickly plottable in cartesian coordinates. The error (by which I mean local truncation error, or the potential error from each step) is on the order of $\delta t$ \cite[p. 298]{Wild1980}.
 Adapting \ref{eq:eulersmethod} for $x$, $y$, $\dot{x}$, and $\dot{y}$, we get the following system of equations.
 \begin{equation}
     \begin{aligned}
@@ -154,9 +158,10 @@ Adapting \ref{eq:eulersmethod} for $x$, $y$, $\dot{x}$, and $\dot{y}$, we get th
         \dot{y}_{n+1} & =\dot{y}_n-\delta t\ddot{y}(x_{n+1},y_{n+1})
     \end{aligned}
 \end{equation}
-When they are evaluated in order, this is a programmable and plottable solution.
-\subsubsection{Runge-Kutta Method}
-Another way to incrementally solve integrable solutions is the Runge-Kutta method (specifically, the Runge-Kutta 4\textsuperscript{th} Order Method). With the same logic of interation as the Euler Method above, Runge-Kutta allows for more precision by using intermediate steps to calculate the $n+1$ position. The general Runge-Kutta 4\textsuperscript{th} order method is
+When they are evaluated in order, this is an iterable, programmable, and plottable solution.
+
+\subsubsection{Runge-Kutta Method}\label{sec:rungekutta}
+Another way to incrementally solve integrable solutions is the Runge-Kutta method (specifically, the Runge-Kutta 4\textsuperscript{th} Order Method) \cite{Musielak_2014}. With the same logic of interation as the Euler Method above, Runge-Kutta allows for more precision by using intermediate steps to calculate the $n+1$ position. Runge-Kutta is much more precise than Euler's method, with an error of $O(\delta t^5)$. The general Runge-Kutta 4\textsuperscript{th} order method is \cite[p. 21]{Musielak_2014}:
 \begin{equation}
     \begin{aligned}
         x_{n+1} & =x_n+\frac{1}{6}\delta t(k_1+2k_2+2k_3+k_4) \\
@@ -165,8 +170,9 @@ Another way to incrementally solve integrable solutions is the Runge-Kutta metho
         k_3     & =f(x_n+\delta t\frac{k_2}{2})               \\
         k_4     & =f(x_n+\delta tk_3)
     \end{aligned}
+    \label{eq:rungekutta}
 \end{equation}
-In the context of this 3-Body problem, the equations become (evaluated in this order)
+Since both position and velocity can be calculated in this manner, in the context of this 3-Body problem, the equations become (evaluated in this order)
 \begin{equation}
     \begin{aligned}
         x_{n+1}       & = x_n + \delta t\dot{x}_n                                                          \\
@@ -177,13 +183,15 @@ In the context of this 3-Body problem, the equations become (evaluated in this o
         ...                                                                                                \\
         \dot{x}_{n+1} & = \dot{x}_n + \frac{1}{6}\delta t({k_1}_x+2{k_2}_x+2{k_2}_x+{k_4}_x)
     \end{aligned}
+    \label{eq:rungekutta-3bp}
 \end{equation}
 
-\subsubsection{Forest \& Neri Method}
+\subsubsection{Forest \& Neri Method}\label{sec:forestneri}
+The Forest and Neri method  is an alternative 4\textsuperscript{th} order integrator to the Runge-Kutta method that requires fewer calculations and is more precise \cite[pp. 60-61]{Kinoshita1990}. While the Runge-Kutta method is applicable to any numerical solution of a system of equations, Forest and Neri's method is specifically adapted to computer solutions to modeling force equations. The equations are as follows:
 \begin{equation}
     \begin{aligned}
          & \beta=2^\frac{1}{3}, c_4=c_1=\frac{1}{2(2-\beta)}, c_3=c_2=\frac{1-\beta}{2(2-\beta)} \\
-         & d_3=d_1=\frac{1}{2-\beta}, d_2=\frac{-\beta}{2-\beta}, d_4\equiv 0
+         & d_3=d_1=\frac{1}{2-\beta}, d_2=\frac{-\beta}{2-\beta}, d_4=0
     \end{aligned}
 \end{equation}
 \begin{equation}
@@ -200,34 +208,50 @@ In the context of this 3-Body problem, the equations become (evaluated in this o
         &...\\
         &\dot{x}_{n+1}=\dot{x}_4
     \end{split}
+    \label{eq:forestandneri}
 \end{equation}
+As with Runge-Kutta, when calculated in order, this is an iterative solution. The error is on the order of $O(\delta t^5)$.
+
+\section{Interpreting Solutions}\label{sec:description}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.49\textwidth]{Far M2.png}
+    \includegraphics[width=0.49\textwidth]{Far M2 Zoomed.png}
+    \caption{With a large $d$, the system behaves as though there is only one star. {\bf(Left)} The full system overview. {\bf(Right)} The same system, zoomed in to the moving mass.}
+    \label{fig:farstar}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.49\textwidth]{Overlay 400 0.005.png}
+    \includegraphics[width=0.49\textwidth]{Overlay 800 0.0025.png}
+    \includegraphics[width=0.49\textwidth]{Overlay 800 0.0025 Zoom.png}
+    \includegraphics[width=0.49\textwidth]{Overlay 4000 0.0005.png}
+    \includegraphics[width=0.5\textwidth]{Overlay 4000 0.0005 Zoom.png}
+    \caption{All graphs are with the same initial conditions, but different iteration size.\\{\bf(Top Left)} Graph at $\delta t=0.005$. All three methods are noticably separated. {\bf(Top Right)} Graph at $\delta t=0.0025$ {\bf(Middle Left)} Zoomed in graph at $\delta t=0.0025$ to show difference between Forest \& Neri \ref{sec:forestneri} and Runge-Kutta \ref{sec:rungekutta} methods. Euler's method \ref{sec:euler} is still noticably different. {\bf(Middle Right)} Graph at $\delta t=0.0005$ {\bf(Bottom)} Zoomed in graph at $\delta t=0.0005$. All three methods are very close at this $\delta t$.}
+    \label{fig:diffbetweenmethods}
+\end{figure}
 
 
-\section{Interpreting Solutions}
-There are several cases in the limit where this solution demonstrates its clarity. The first case is when $d$ is very large (and $x$ is not). In this case, the terms dependent on $r_2$ disappear. This is equivalent to a system with only one star with mass $m_a$. On the other hand, if $d$ is very small, $r_1\approxeq r_2$. This is also equivalent to a system with one star, but this time the star has a mass $(1+\alpha)m_a$.
+There are several cases in the limit where this solution demonstrates its clarity. The first case is when $d$ is very large (and $x$ is not) \ref{fig:farstar}. In this case, the terms dependent on $r_2$ disappear. This is equivalent to a system with only one star with mass $m_a$. On the other hand, if $d$ is very small, $r_1\approxeq r_2$. This is also equivalent to a system with one star, but this time the star has a mass $(1+\alpha)m_a$.
 
-\bigskip
+From Fig. \ref{fig:diffbetweenmethods}, we can see the difference between methods and iteration size. At large iteration size (higher error), the difference between the methods is far more pronounced. Indeed, the curves are noticably not smooth. As the errors compound, the final positions between the methods are very different. Decreasing the iteration size by a factor of 2 results in much closer results. In fact, it is hard at first glance to differentiate between the Runge-Kutta and Forest \& Neri methods -- only after zooming in is the difference evident. The closeness between the methods increases even further when $\delta t$ is decrease by another factor of 5. Here, even Euler's method is very similar to the 4\textsuperscript{th} order methods, although they are still closer to each other.
 
-I have yet to finish my program, so I do not have plots of results to discuss. Once I do, I will analyze these plots, especially in terms of how varying different parameters results in different solutions, and how chaotic these parameters are.
-
-Finally, I will demonstrate my code in the text and with a link to \href{https://github.com/jasperswallen/PHYS304-Project}{my public GitHub repository}
-containing a Jupyter Notebook that readers will be able to download and run.
 
 \appendix
-\section{Code}
+\section{Code}\label{sec:code}
 The code for this project is fully available at \href{https://github.com/jasperswallen/PHYS304-Project}{\color{blue}{\underline{my public GitHub repository}}},
-containing both a Jupyter Notebook and command-line Python script. The following is \texttt{main.py::eulerMethod}, which calculates and plots the graph of Euler's Three Body Problem with Euler's numerical approximation method. This code is found in \texttt{main.py} and \texttt{main.ipynb}. The requirements to run this code are Python 3, \texttt{matplotlib}, and \texttt{numpy}. Then, run \texttt{\$ python3 main.py} and input the initial positions and masses of all three objects, as well as the initial velocity of the moving object.
+containing both a Jupyter Notebook and command-line Python script. The requirements to run these are Python 3, \texttt{matplotlib}, and \texttt{numpy} (as well as \texttt{ipywidgets} for the Jupyter Notebook). Then, run \texttt{\$ python3 main.py} and input the initial positions and masses of all three objects, as well as the initial velocity of the moving object. Alternatively, use the \texttt{main.ipynb} Jupyter Notebook to input values from a browser or IDE. The Jupyter Notebook presentation of graphs is slightly different, as each method is in its own graph to show the evolution of the function with respect to time.
+
+The following is \texttt{eulerMethod()}, which calculates and plots the graph of Euler's Three Body Problem with Euler's numerical approximation method. This code is found in \texttt{main.py} and \texttt{main.ipynb}.
 
 \begin{lstlisting}[language=Python, numbers=left, breaklines=true]
-def eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
+def eulerMethod(moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
+    # declare arrays that will be appended to in loop
     x = [moving_mass_x]
     y = [moving_mass_y]
     x_prime = [moving_mass_x_prime]
     y_prime = [moving_mass_y_prime]
-
-    # We have the following equations of motion
-    # x'_(n+1)=x'_n-deltat4pi^2 (x_(n+1)/(r_1^3)_(n+1) +alpha(x_(n+1)-d)/(r_2^3)_(n+1))
-    # y'_(n+1)=y'_n-deltat4pi^2 y_(n+1) (1/(r_1^3)_(n+1) +alpha/(r_2^3)_(n+1))
 
     for n in range(its):
         # calculate next x, y, x', and y'
@@ -244,20 +268,12 @@ def eulerMethod(mass_1_x, mass_1_y, mass_2_x, mass_2_y, alpha, moving_mass_x, mo
             calculateYAccel(x[n + 1], y[n + 1])
         y_prime.append(y_prime_n_plus_one)
 
-    plt.plot(x, y)
-
-    masses = [[mass_1_x, mass_2_x, moving_mass_x],
-              [mass_1_y, mass_2_y, moving_mass_y]]
-    colors = np.array([[255, 0, 0], [0, 255, 0], [0, 0, 255]])
-
-    plt.scatter(masses[0], masses[1], c=colors / 255)
-
-    labels = ["m1", "m2", "m"]
-    for i, txt in enumerate(labels):
-        plt.annotate(txt, (masses[0][i], masses[1][i]))
+    plt.plot(x, y, label="Euler's Method", color="red")
 \end{lstlisting}
 
 The Runge-Kutta and Forest \& Neri methods work in a similar manner, although they require many more calculations per iteration.
+
+Note: the Jupyter Notebook uses an additional recipe, colorline \cite{Colorline}, to show evolution with time.
 
 \bibliography{bibliography}
 
