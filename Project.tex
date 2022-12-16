@@ -12,6 +12,7 @@
 \usepackage{setspace}
 \usepackage{listings}
 \usepackage{caption}
+\usepackage{pythonhighlight}
 
 \graphicspath{ {images/} }
 
@@ -141,7 +142,7 @@ This is a system of nonlinear differential equations. As demonstrated above, ana
 \subsection{Plottable Solutions}
 Instead of analytically solving this system, numerical integrators can be used. Here, Euler's Method, the Runge-Kutta 4\textsuperscript{th} Order Method, and the Forest \& Neri method will be demonstrated. There are many other methods that allow for approximate solutions of systems of coupled differential equations, such as the leapfrog method.
 
-However, these particular methods have been chosen for several reasons. Euler's Method was chosen for its simplicity, speed, and ease of use with arrays (it accesses each element one-by-one). The Runge-Kutta 4\textsuperscript{th} Order Method was chosen because it is commonly used in general iterative differential equations solutions. Ther Forest \& Neri method was chosen because it was specifically written for use with force equations and computer modeling.
+However, these particular methods have been chosen for several reasons. Euler's Method was chosen for its simplicity, speed, and ease of use with arrays (it accesses each element one-by-one). The Runge-Kutta 4\textsuperscript{th} Order Method was chosen because it is commonly used in general iterative differential equations solutions. The Forest \& Neri method was chosen because it was specifically written for use with force equations and computer modeling.
 
 \subsubsection{Euler's Method}\label{sec:euler}
 Euler's method is a simple and efficient formula to iteratively solve differential equations. Using Euler's approximation
@@ -162,7 +163,7 @@ Adapting \ref{eq:eulersmethod} for $x$, $y$, $\dot{x}$, and $\dot{y}$, we get th
 When they are evaluated in order, this is an iterable, programmable, and plottable solution.
 
 \subsubsection{Runge-Kutta Method}\label{sec:rungekutta}
-Another way to incrementally solve integrable solutions is the Runge-Kutta method (specifically, the Runge-Kutta 4\textsuperscript{th} Order Method) \cite{Musielak_2014}. With the same logic of interation as the Euler Method above, Runge-Kutta allows for more precision by using intermediate steps to calculate the $n+1$ position. Runge-Kutta is much more precise than Euler's method, with an error of $O(\delta t^5)$. The general Runge-Kutta 4\textsuperscript{th} order method is \cite[p. 21]{Musielak_2014}:
+Another way to incrementally solve integrable solutions is the Runge-Kutta method (specifically, the Runge-Kutta 4\textsuperscript{th} Order Method) \cite{Musielak_2014}. With the same logic of iteration as the Euler Method above, Runge-Kutta allows for more precision by using intermediate steps to calculate the $n+1$ position. Runge-Kutta is much more precise than Euler's method, with an error of $O(\delta t^5)$. The general Runge-Kutta 4\textsuperscript{th} order method is \cite[p. 21]{Musielak_2014}:
 \begin{equation}
     \begin{aligned}
         x_{n+1} & =x_n+\frac{1}{6}\delta t(k_1+2k_2+2k_3+k_4) \\
@@ -240,7 +241,7 @@ As with Runge-Kutta, when calculated in order, this is an iterative solution. Th
 
 There are several cases in the limit where this solution demonstrates its clarity. The first case is when $d$ is very large (and $x$ is not) \ref{fig:farstar}. In this case, the terms dependent on $r_2$ disappear. This is equivalent to a system with only one star with mass $m_a$. On the other hand, if $d$ is very small, $r_1\approxeq r_2$. This is also equivalent to a system with one star, but this time the star has a mass $(1+\alpha)m_a$.
 
-From Fig. \ref{fig:diffbetweenmethods}, we can see the difference between methods and iteration size. At large iteration size (higher error), the difference between the methods is far more pronounced. Indeed, the curves are noticably not smooth. As the errors compound, the final positions between the methods are very different. Decreasing the iteration size by a factor of 2 results in much closer results. In fact, it is hard at first glance to differentiate between the Runge-Kutta and Forest \& Neri methods -- only after zooming in is the difference evident. The closeness between the methods increases even further when $\delta t$ is decrease by another factor of 5. Here, even Euler's method is very similar to the 4\textsuperscript{th} order methods, although they are still closer to each other.
+From Fig. \ref{fig:diffbetweenmethods}, we can see the difference between methods and iteration size. At large iteration size (higher error), the difference between the methods is far more pronounced. Indeed, the curves are noticeably not smooth. As the errors compound, the final positions between the methods are very different. Decreasing the iteration size by a factor of 2 results in much closer results. In fact, it is hard at first glance to differentiate between the Runge-Kutta and Forest \& Neri methods -- only after zooming in is the difference evident. The closeness between the methods increases even further when $\delta t$ is decrease by another factor of 5. Here, even Euler's method is very similar to the 4\textsuperscript{th} order methods, although they are still closer to each other.
 
 
 \appendix
@@ -250,7 +251,7 @@ containing both a Jupyter Notebook and command-line Python script. The requireme
 
 The following is \texttt{eulerMethod()}, which calculates and plots the graph of Euler's Three Body Problem with Euler's numerical approximation method. This code is found in \texttt{main.py} and \texttt{main.ipynb}.
 
-\begin{lstlisting}[language=Python, numbers=left, breaklines=true]
+\begin{lstlisting}[style=mypython]
 def eulerMethod(moving_mass_x, moving_mass_y, moving_mass_x_prime, moving_mass_y_prime, its, delta):
     # declare arrays that will be appended to in loop
     x = [moving_mass_x]
