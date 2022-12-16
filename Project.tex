@@ -88,7 +88,7 @@ Therefore, there are two conserved quantities in the system: Whittaker's constan
           & =-2mf^2E-\alpha
     \end{aligned}
 \end{equation}
-where $r_i$ is the distance $|\bm{r_i}-\bm{r}|$ between $m_i$ and $m$; $\bm{L_i}=mr_i^2\dot{\theta _i}\hat{z}$ is the angular momentum of a mass; $\theta _i$ is the angle between $\bm{r_i}$ and the $x$-axis; $\mu _i=Gmm_i$; and $\alpha$ is the “separation constant” derived from the separation of variables of $E$ in elliptical coordinates \cite[p. 101]{Krishnaswami2019}.
+where $r_i$ is the distance $|\bm{r_i}-\bm{r}|$ between $m_i$ and $m$; $\bm{L_i}=mr_i^2\dot{\theta _i}\hat{z}$ is the angular momentum of a mass; $\theta _i$ is the angle between $\bm{r_i}$ and the $x$-axis; $\mu _i=Gmm_i$; and $\alpha$ is the ``separation constant'' derived from the separation of variables of $E$ in elliptical coordinates \cite[p. 101]{Krishnaswami2019}.
 
 Since there are also just two degrees of freedom in this case, the system is exactly analytically solvable by integration in the Liouville sense. See Ó'Mathúna \cite[pages 49-105 and 113-142]{OMathuna2008} for a detailed solution.
 
@@ -104,7 +104,7 @@ To do this, without loss of generality, shift the system so that $m_1$ is at the
     \label{fig:shiftedsys}
 \end{figure}
 
-Up until this point, the masses and distances have been unitless and arbitrary. If these masses are instead measured in terms of solar units, further simplifications arise. If $m_a$ is set to a “solar mass”, we see that $Gm_a=4\pi^2$. This is because the angular velocity of a mass around a primary (for example, the Earth around the Sun) is $2\pi*AU/yr$, where $AU$ is the average distance between the primary and the mass and $yr$ is the period (on Earth, one year). That is, the problem is nondimensionalized by setting the unit of mass to $m_1$ and the unit of time such that the period of the orbits of the primaries is $2\pi$ \cite{Wild1980,Worthington2012}.
+Up until this point, the masses and distances have been unitless and arbitrary. If these masses are instead measured in terms of solar units, further simplifications arise. If $m_a$ is set to a ``solar mass'', we see that $Gm_a=4\pi^2$. This is because the angular velocity of a mass around a primary (for example, the Earth around the Sun) is $2\pi*AU/yr$, where $AU$ is the average distance between the primary and the mass and $yr$ is the period (on Earth, one year). That is, the problem is nondimensionalized by setting the unit of mass to $m_1$ and the unit of time such that the period of the orbits of the primaries is $2\pi$ \cite{Wild1980,Worthington2012}.
 
 Since the origin is now fixed, the equations of motion now use relative positioning to the origin (and $m_1$). From this and Newton's Law of Gravitation,
 \begin{equation}
@@ -233,7 +233,7 @@ As with Runge-Kutta, when calculated in order, this is an iterative solution. Th
     \includegraphics[width=0.49\textwidth]{Overlay 800 0.0025 Zoom.png}
     \includegraphics[width=0.49\textwidth]{Overlay 4000 0.0005.png}
     \includegraphics[width=0.5\textwidth]{Overlay 4000 0.0005 Zoom.png}
-    \caption{All graphs are with the same initial conditions, but different iteration size.\\{\bf(Top Left)} Graph at $\delta t=0.005$. All three methods are noticably separated. {\bf(Top Right)} Graph at $\delta t=0.0025$ {\bf(Middle Left)} Zoomed in graph at $\delta t=0.0025$ to show difference between Forest \& Neri \ref{sec:forestneri} and Runge-Kutta \ref{sec:rungekutta} methods. Euler's method \ref{sec:euler} is still noticably different. {\bf(Middle Right)} Graph at $\delta t=0.0005$ {\bf(Bottom)} Zoomed in graph at $\delta t=0.0005$. All three methods are very close at this $\delta t$.}
+    \caption{All graphs are with the same initial conditions, but different iteration size.\linebreak{\bf(Top Left)} Graph at $\delta t=0.005$. All three methods are noticeably separated. {\bf(Top Right)} Graph at $\delta t=0.0025$ {\bf(Middle Left)} Zoomed in graph at $\delta t=0.0025$ to show difference between Forest \& Neri \ref{sec:forestneri} and Runge-Kutta \ref{sec:rungekutta} methods. Euler's method \ref{sec:euler} is still noticeably different. {\bf(Middle Right)} Graph at $\delta t=0.0005$ {\bf(Bottom)} Zoomed in graph at $\delta t=0.0005$. All three methods are very close at this $\delta t$.}
     \label{fig:diffbetweenmethods}
 \end{figure}
 
